@@ -18,7 +18,7 @@ class Tetromino:
         self.rotation = 0
 
     def current(self):
-        return configurations[self.type][self.orientation]
+        return self.configurations[self.type][self.rotation]
 
     def rotate(self):
         self.rotation = (self.rotation + 1) % len(self.configurations[self.type])
