@@ -26,7 +26,7 @@ class Tetris:
                 idx = i * 4 + j
                 if idx in self.tet.current():
                     if self.is_out_of_bounds(self.tet.x + i, self.tet.y + j) or \
-                            self.board[self.tet.y + j][self.tet.x + i] > 0:
+                            self.board[self.tet.y + j][self.tet.x + i] == -1:
                                 return True
 
         return False
@@ -42,7 +42,7 @@ class Tetris:
             for j in range(4):
                 idx = i * 4 + j
                 if idx in self.tet.current():
-                    self.board[self.tet.y + j][self.tet.x + i] = 1
+                    self.board[self.tet.y + j][self.tet.x + i] = -1
         self.clear_rows()
         self.new_tet()
         if self.is_intersecting():
@@ -92,15 +92,30 @@ class Tetris:
         if self.is_intersecting():
             self.tet.x -= d
 
+        self.move_down()
+
     def rotate(self):
         old = self.tet.rotation
         self.tet.rotate()
         if self.is_intersecting():
             self.tet.rotation = old
+            
+        self.move_down()
+
+    def get_projection(self):
+        board_projection = np.copy(self.board)
+
+        for i in range(4):
+            for j in range(4):
+                idx = i * 4 + j
+                if idx in self.tet.current():
+                    board_projection[self.tet.y + j][self.tet.x + i] = 1
+
+        return board_projection
 
     def print_board(self):
         def color_sign(x):
-            c = colorama.Fore.GREEN if x > 0 else colorama.Fore.RED
+            c = colorama.Fore.GREEN if x == 1 else colorama.Fore.RED if x == 0 else colorama.Fore.BLUE
             return f'{c}{x}'
 
         board_projection = np.copy(self.board)
@@ -109,7 +124,7 @@ class Tetris:
             for j in range(4):
                 idx = i * 4 + j
                 if idx in self.tet.current():
-                    board_projection[self.tet.y + j][self.tet.x + i] = 2
+                    board_projection[self.tet.y + j][self.tet.x + i] = 1
 
         np.set_printoptions(formatter={'float': color_sign}, linewidth=1000)
         print(board_projection)
