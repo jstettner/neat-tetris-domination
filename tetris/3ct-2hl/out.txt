@@ -1,0 +1,11 @@
+Population's average fitness: 3.50000 stdev: 20.92248
+Best fitness: 200.00000 - size: (8, 731) - species 1 - id 58961
+Average adjusted fitness: 0.009
+Mean genetic distance 2.298, standard deviation 0.397
+Population of 200 members in 2 species:
+   ID   age  size  fitness  adj fit  stag
+  ====  ===  ====  =======  =======  ====
+     1  299   195    200.0    0.018   243
+     3  167     5      0.0    0.000   166
+Total extinctions: 0
+Generation time: 69.905 sec

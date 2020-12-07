@@ -11,6 +11,7 @@ class Tetris:
     score = 0
     tet = None
     state = 0
+    turns = 0
 
     def __init__(self):
         self.board = np.array(np.zeros((HEIGHT, WIDTH)))
@@ -26,7 +27,7 @@ class Tetris:
                 idx = i * 4 + j
                 if idx in self.tet.current():
                     if self.is_out_of_bounds(self.tet.x + i, self.tet.y + j) or \
-                            self.board[self.tet.y + j][self.tet.x + i] == -1:
+                            self.board[self.tet.y + j][self.tet.x + i] == 1:
                                 return True
 
         return False
@@ -42,7 +43,7 @@ class Tetris:
             for j in range(4):
                 idx = i * 4 + j
                 if idx in self.tet.current():
-                    self.board[self.tet.y + j][self.tet.x + i] = -1
+                    self.board[self.tet.y + j][self.tet.x + i] = 1
         self.clear_rows()
         self.new_tet()
         if self.is_intersecting():
@@ -76,6 +77,7 @@ class Tetris:
         self.score += ROW_VALUE * rows_cleared**2
     
     def move_down_fully(self):
+        self.turns += 1
         while not self.is_intersecting():
             self.tet.y += 1
         self.tet.y -= 1
@@ -83,6 +85,7 @@ class Tetris:
     
     def move_down(self):
         self.tet.y += 1
+        self.turns += 1
         if self.is_intersecting():
             self.tet.y -= 1
             self.collide()
@@ -99,7 +102,7 @@ class Tetris:
         self.tet.rotate()
         if self.is_intersecting():
             self.tet.rotation = old
-            
+
         self.move_down()
 
     def get_projection(self):
