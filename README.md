@@ -13,4 +13,6 @@
 
 # To train
 
-python dominator _epochs_ _opt-chkpt_
+`python src/dominator.py _epochs_ _opt-chkpt_`
+
+-1 epochs means run until fitness threshold.

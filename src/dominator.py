@@ -5,6 +5,8 @@ import numpy as np
 import pickle       # pip install cloudpickle
 import sys
 import visualize
+import multiprocessing
+import os
 
 HEADLESS = True
 
@@ -34,9 +36,11 @@ def eval_genome(genome, config):
     return game.tetris.turns
 
 def train(generations = 100, checkpt = None):
+    local_dir = os.path.dirname(__file__)
+    config_path = os.path.join(local_dir, 'config-ff')
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                              neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                             'config-ff')
+                             config_path)
     if checkpt == None:
         p = neat.Population(config)
     else:
@@ -47,9 +51,12 @@ def train(generations = 100, checkpt = None):
     p.add_reporter(stats)
     p.add_reporter(neat.Checkpointer(10))
 
-    pe = neat.ParallelEvaluator(10, eval_genome)
+    pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_genome)
 
-    winner = p.run(pe.evaluate, generations)
+    if (generations == -1):
+        winner = p.run(pe.evaluate)
+    else:
+        winner = p.run(pe.evaluate, generations)
 
     print('\nBest genome:\n{!s}'.format(winner))
     with open('winner.pkl', 'wb') as output:
