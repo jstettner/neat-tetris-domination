@@ -138,7 +138,6 @@ class Game:
 
     def __init__(self):
         self.tetris = Tetris()
-        print(self.tetris)
 
     def move(self, mv):
         mv = int(mv)
