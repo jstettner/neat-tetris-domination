@@ -1,5 +1,6 @@
-**/__pycache__/
-tetris/*.svg
-tetris/*.gv
+src/__pycache__/
+src/*.svg
+src/*.gv
 neat-checkpoint-*
 tetris-env/
+winner.pkl
