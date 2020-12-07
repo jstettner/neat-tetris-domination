@@ -1,8 +1,9 @@
 import tetris as tet
 import time
-import neat
+import neat # pip install neat-python
 import numpy as np
 import pickle       # pip install cloudpickle
+import sys
 
 HEADLESS = True
 
@@ -57,4 +58,12 @@ def train(generations = 100, checkpt = None):
     
 
 if __name__ == "__main__":
-    train(500)
+    print(sys.argv)
+    assert(len(sys.argv) == 2 or len(sys.argv) == 3)
+
+    epochs = sys.argv[1]
+    _chkpt = sys.argv[2]
+    if _chkpt:
+        train(epochs, _chkpt)
+    else:
+        train(epochs)

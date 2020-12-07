@@ -1,0 +1,4 @@
+cloudpickle==1.6.0
+colorama==0.4.4
+neat-python==0.92
+numpy==1.19.4
