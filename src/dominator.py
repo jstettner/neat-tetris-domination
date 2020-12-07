@@ -7,8 +7,10 @@ import sys
 import visualize
 import multiprocessing
 import os
+import skimage.measure
 
 HEADLESS = True
+POOL_X, POOL_Y = (4,2)
 
 def one_hot(num, size):
     _arr = np.array(np.zeros(size))
@@ -23,7 +25,9 @@ def eval_genome(genome, config):
         if not HEADLESS:
             game.tetris.print_board()
 
-        feature_vector = np.ndarray.flatten(game.tetris.get_projection())
+        pooled = skimage.measure.block_reduce(game.tetris.get_projection(), \
+             (POOL_X, POOL_Y), np.max)
+        feature_vector =  np.ndarray.flatten(pooled)
 
         output = net.activate(feature_vector)
         mv = np.argmax(output)
@@ -70,8 +74,8 @@ if __name__ == "__main__":
     assert(len(sys.argv) == 2 or len(sys.argv) == 3)
 
     epochs = int(sys.argv[1])
-    _chkpt = sys.argv[2]
-    if _chkpt:
+    if (len(sys.argv) == 3):
+        _chkpt = sys.argv[2]
         train(epochs, _chkpt)
     else:
         train(epochs)
