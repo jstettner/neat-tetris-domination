@@ -1,3 +1,5 @@
 **/__pycache__/
-tetris_env/
+tetris/*.svg
+tetris/*.gv
 neat-checkpoint-*
+tetris-env/

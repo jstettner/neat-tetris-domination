@@ -4,6 +4,7 @@ import neat # pip install neat-python
 import numpy as np
 import pickle       # pip install cloudpickle
 import sys
+import visualize
 
 HEADLESS = True
 
@@ -33,11 +34,10 @@ def eval_genome(genome, config):
     return game.tetris.turns
 
 def train(generations = 100, checkpt = None):
-    if checkpt == None:
-        config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
+    config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                              neat.DefaultSpeciesSet, neat.DefaultStagnation,
                              'config-ff')
-
+    if checkpt == None:
         p = neat.Population(config)
     else:
         p = neat.Checkpointer.restore_checkpoint(checkpt)
@@ -49,19 +49,20 @@ def train(generations = 100, checkpt = None):
 
     pe = neat.ParallelEvaluator(10, eval_genome)
 
-    winner = p.run(pe.evaluate)
+    winner = p.run(pe.evaluate, generations)
 
     print('\nBest genome:\n{!s}'.format(winner))
     with open('winner.pkl', 'wb') as output:
         pickle.dump(winner, output, 1)
 
-    
+    visualize.plot_stats(stats, ylog=True, view=True, filename="feedforward-fitness.svg")
+    visualize.plot_species(stats, view=True, filename="feedforward-speciation.svg")
 
 if __name__ == "__main__":
     print(sys.argv)
     assert(len(sys.argv) == 2 or len(sys.argv) == 3)
 
-    epochs = sys.argv[1]
+    epochs = int(sys.argv[1])
     _chkpt = sys.argv[2]
     if _chkpt:
         train(epochs, _chkpt)
