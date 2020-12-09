@@ -116,6 +116,21 @@ class Tetris:
 
         return board_projection
 
+    def get_top_four(self):
+        def row_with_first_item():
+            for i in range(HEIGHT):
+                for j in range(WIDTH):
+                    if self.board[i][j] == 1:
+                        return i
+
+            return HEIGHT - 1
+
+        r = row_with_first_item()
+        if  HEIGHT - r > 4: 
+            return np.copy(self.board)[r:r+4][:], r
+        else:
+            return np.copy(self.board)[HEIGHT - 4:][:], r
+
     def print_board(self):
         def color_sign(x):
             c = colorama.Fore.GREEN if x == 1 else colorama.Fore.RED if x == 0 else colorama.Fore.BLUE
