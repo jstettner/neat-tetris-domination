@@ -9,7 +9,7 @@ import multiprocessing
 import os
 import skimage.measure
 
-HEADLESS = True
+HEADLESS = True 
 POOL_X, POOL_Y = (4,1)
 
 def one_hot(num, size):
@@ -47,7 +47,7 @@ def eval_genome_top_four(genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
     scores = []
 
-    for i in range(3):
+    for i in range(12):
         game = tet.Game()
 
         while (game.tetris.state == 0):
@@ -72,7 +72,8 @@ def eval_genome_top_four(genome, config):
             if not HEADLESS:
                 time.sleep(.05)
 
-        scores.append(game.tetris.turns)
+        
+        scores.append(game.tetris.turns + game.tetris.score)
 
     return np.average(scores)
 
