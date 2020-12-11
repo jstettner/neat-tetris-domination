@@ -77,7 +77,7 @@ def eval_genome_top_four(genome, config):
         # scores.append(game.tetris.turns + game.tetris.score)
 
     # return np.average(scores)
-    return game.tetris.turns
+    return game.tetris.turns + game.tetris.score
 
 def train(generations = 100, checkpt = None):
     local_dir = os.path.dirname(__file__)
