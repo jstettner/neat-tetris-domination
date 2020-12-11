@@ -1,6 +1,7 @@
 src/__pycache__/
 src/*.svg
 src/*.gv
+src/messagingReporter.py
 neat-checkpoint-*
 tetris-env/
 winner.pkl

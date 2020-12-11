@@ -8,8 +8,9 @@ import visualize
 import multiprocessing
 import os
 import skimage.measure
+# import messagingReporter 
 
-HEADLESS = True 
+HEADLESS = True
 POOL_X, POOL_Y = (4,1)
 
 def one_hot(num, size):
@@ -39,43 +40,44 @@ def eval_genome_board(genome, config):
         game.move(mv)
 
         if not HEADLESS:
-            time.sleep(.05)
+            time.sleep(.5)
 
     return game.tetris.turns
 
 def eval_genome_top_four(genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
-    scores = []
+    # scores = []
 
-    for i in range(12):
-        game = tet.Game()
+    # for i in range(10):
+    game = tet.Game()
 
-        while (game.tetris.state == 0):
-            if not HEADLESS:
-                game.tetris.print_board()
+    while (game.tetris.state == 0):
+        if not HEADLESS:
+            game.tetris.print_board()
 
-            piece_vector = one_hot(game.tetris.tet.type, 7)
-            rotation_vector = one_hot(game.tetris.tet.rotation, 4)
+        piece_vector = one_hot(game.tetris.tet.type, 7)
+        rotation_vector = one_hot(game.tetris.tet.rotation, 4)
+    
+        board, row = game.tetris.get_top_four()
+        x_vector = np.array([game.tetris.tet.x])
+        y_vector = np.array([row - game.tetris.tet.y])
+        board_vector = np.ndarray.flatten(board)
+        feature_vector =  np.concatenate((piece_vector, rotation_vector, x_vector, y_vector, board_vector))
+        # print(feature_vector)
+
+        output = net.activate(feature_vector)
+        mv = np.argmax(output)
+        prev_board = np.copy(game.tetris.board)
+        game.move(mv)
+
+        if not HEADLESS:
+            time.sleep(.05)
+
         
-            board, row = game.tetris.get_top_four()
-            x_vector = np.array([game.tetris.tet.x])
-            y_vector = np.array([row - game.tetris.tet.y])
-            board_vector = np.ndarray.flatten(board)
-            feature_vector =  np.concatenate((piece_vector, rotation_vector, x_vector, y_vector, board_vector))
-            # print(feature_vector)
+        # scores.append(game.tetris.turns + game.tetris.score)
 
-            output = net.activate(feature_vector)
-            mv = np.argmax(output)
-            prev_board = np.copy(game.tetris.board)
-            game.move(mv)
-
-            if not HEADLESS:
-                time.sleep(.05)
-
-        
-        scores.append(game.tetris.turns + game.tetris.score)
-
-    return np.average(scores)
+    # return np.average(scores)
+    return game.tetris.turns
 
 def train(generations = 100, checkpt = None):
     local_dir = os.path.dirname(__file__)
@@ -92,6 +94,7 @@ def train(generations = 100, checkpt = None):
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
     p.add_reporter(neat.Checkpointer(10))
+    # p.add_reporter(messagingReporter.MessagingReporter(True))
 
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_genome_top_four)
     # pe = neat.ParallelEvaluator(1, eval_genome_top_four)

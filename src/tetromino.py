@@ -1,5 +1,3 @@
-import random 
-
 class Tetromino:
     configurations = [
         [[1,5,9,13], [4,5,6,7]], # Line
@@ -11,10 +9,10 @@ class Tetromino:
         [[2,5,6,9], [5,6,10,11]] # Step 2
     ]
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, typ):
         self.x = x
         self.y = y
-        self.type = random.randint(0, len(self.configurations) - 1)
+        self.type = typ # random.randint(0, len(self.configurations) - 1)
         self.rotation = 0
 
     def current(self):

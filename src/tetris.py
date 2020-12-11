@@ -1,6 +1,7 @@
 from tetromino import *
 import colorama
 import numpy as np
+import random 
 
 HEIGHT = 40
 WIDTH = 10
@@ -14,6 +15,7 @@ class Tetris:
     turns = 0
 
     def __init__(self):
+        random.seed(4701)
         self.board = np.array(np.zeros((HEIGHT, WIDTH)))
         self.new_tet()
 
@@ -33,7 +35,7 @@ class Tetris:
         return False
 
     def new_tet(self):
-        self.tet = Tetromino(4, 0) 
+        self.tet = Tetromino(4, 0, random.randint(0, 6)) 
 
     def end_game(self):
         self.state = 1
