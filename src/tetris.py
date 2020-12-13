@@ -2,6 +2,7 @@ from tetromino import *
 import colorama
 import numpy as np
 import random 
+import pygame
 
 HEIGHT = 40
 WIDTH = 10
@@ -151,11 +152,23 @@ class Tetris:
     
 
 class Game:
+    pygame.init()
+    
+    black = pygame.Color("#000000")
+    white = pygame.Color("#FFFFFF")
+    gray = pygame.Color("#ABABAB")
+    
+    zoom = 20
+    board_size = (400, 500)
+    screen = pygame.display.set_mode(board_size)
+    
     tetris = None
 
     def __init__(self):
         self.tetris = Tetris()
+    
 
+  
     def move(self, mv):
         mv = int(mv)
         # 0 = down, 1 = left, 2 = right, 3 = rotate 
@@ -169,13 +182,31 @@ class Game:
             self.tetris.move_down_fully()
         else:
             self.tetris.rotate()
-
+    
+    
     def play(self):
         while (self.tetris.state == 0):
-            self.tetris.print_board()
+            #self.tetris.print_board()
             mv = input()
             self.move(mv)
+            for i in range(HEIGHT):
+                for j in range(WIDTH):
+                    pygame.draw.rect(screen, gray,  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom, zoom], 1)
+                    if self.tetris.board[i][j] > 0:
+                        pygame.draw.rect(screen, tet_colors[self.tetris.board[i][j]],  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom-2, zoom-1])
+            
+            if self.tetris.tet != None:
+                for i in range(4):
+                    for j in range(4):
+                        if i*4+j in self.tetris.tet.current():
+                            pygame.draw.rect(screen, tet_colors[self.tetris.board[i][j]], [self.tetris.tet.x+zoom *(j+self.tetris.tet.x) +1,
+                                                     self.tetris.tet.y + zoom *(i+self.tetris.tet.y)+1,
+                                                    zoom-2, zoom-2])
+    
+        
+        pygame.quit()
         print(self.tetris.score)
+    
 
 
 
