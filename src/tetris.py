@@ -152,23 +152,11 @@ class Tetris:
     
 
 class Game:
-    pygame.init()
-    
-    black = pygame.Color("#000000")
-    white = pygame.Color("#FFFFFF")
-    gray = pygame.Color("#ABABAB")
-    
-    zoom = 20
-    board_size = (400, 500)
-    screen = pygame.display.set_mode(board_size)
-    
     tetris = None
 
     def __init__(self):
         self.tetris = Tetris()
-    
 
-  
     def move(self, mv):
         mv = int(mv)
         # 0 = down, 1 = left, 2 = right, 3 = rotate 
@@ -185,6 +173,15 @@ class Game:
     
     
     def play(self):
+        black = pygame.Color("#000000")
+        white = pygame.Color("#FFFFFF")
+        gray = pygame.Color("#ABABAB")
+
+        pygame.init()
+        zoom = 20
+        board_size = (400, 500)
+        screen = pygame.display.set_mode(board_size)
+
         while (self.tetris.state == 0):
             #self.tetris.print_board()
             mv = input()
