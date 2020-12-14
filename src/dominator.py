@@ -8,7 +8,7 @@ import visualize
 import multiprocessing
 import os
 import skimage.measure
-# import messagingReporter 
+import messagingReporter 
 
 HEADLESS = True
 POOL_X, POOL_Y = (4,1)
@@ -26,13 +26,14 @@ def eval_genome_board(genome, config):
         if not HEADLESS:
             game.tetris.print_board()
 
-        pooled = skimage.measure.block_reduce(game.tetris.get_projection(), \
-             (POOL_X, POOL_Y), np.max)
+        # pooled = skimage.measure.block_reduce(game.tetris.get_projection(), \
+        #      (POOL_X, POOL_Y), np.max)
         # print(pooled)
-        piece_vector = one_hot(game.tetris.tet.type, 7)
-        rotation_vector = one_hot(game.tetris.tet.rotation, 4)
+        # piece_vector = one_hot(game.tetris.tet.type, 7)
+        # rotation_vector = one_hot(game.tetris.tet.rotation, 4)
         # print(piece_vector)
-        feature_vector =  np.concatenate((np.ndarray.flatten(pooled), piece_vector, rotation_vector))
+        # feature_vector =  np.concatenate((np.ndarray.flatten(pooled), piece_vector, rotation_vector))
+        feature_vector = np.ndarray.flatten(game.tetris.get_projection())
 
         output = net.activate(feature_vector)
         mv = np.argmax(output)
@@ -42,7 +43,7 @@ def eval_genome_board(genome, config):
         if not HEADLESS:
             time.sleep(.5)
 
-    return game.tetris.turns
+    return game.tetris.turns + game.tetris.score
 
 def eval_genome_top_four(genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -59,8 +60,10 @@ def eval_genome_top_four(genome, config):
         rotation_vector = one_hot(game.tetris.tet.rotation, 4)
     
         board, row = game.tetris.get_top_four()
-        x_vector = np.array([game.tetris.tet.x])
-        y_vector = np.array([row - game.tetris.tet.y])
+        # x_vector = np.array([game.tetris.tet.x])
+        x_vector = one_hot(game.tetris.tet.x, 10)
+        # y_vector = np.array([row - game.tetris.tet.y])
+        y_vector = one_hot(row - game.tetris.tet.y, 40)
         board_vector = np.ndarray.flatten(board)
         feature_vector =  np.concatenate((piece_vector, rotation_vector, x_vector, y_vector, board_vector))
         # print(feature_vector)
@@ -77,7 +80,7 @@ def eval_genome_top_four(genome, config):
         # scores.append(game.tetris.turns + game.tetris.score)
 
     # return np.average(scores)
-    return game.tetris.turns + game.tetris.score
+    return game.tetris.turns + 3*game.tetris.score
 
 def train(generations = 100, checkpt = None):
     local_dir = os.path.dirname(__file__)
@@ -97,19 +100,22 @@ def train(generations = 100, checkpt = None):
     # p.add_reporter(messagingReporter.MessagingReporter(True))
 
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_genome_top_four)
+    # pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_genome_board)
     # pe = neat.ParallelEvaluator(1, eval_genome_top_four)
 
-    if (generations == -1):
-        winner = p.run(pe.evaluate)
-    else:
-        winner = p.run(pe.evaluate, generations)
+    try:
+        if (generations == -1):
+            winner = p.run(pe.evaluate)
+        else:
+            winner = p.run(pe.evaluate, generations)
 
-    print('\nBest genome:\n{!s}'.format(winner))
-    with open('winner.pkl', 'wb') as output:
-        pickle.dump(winner, output, 1)
+        print('\nBest genome:\n{!s}'.format(winner))
+        with open('winner.pkl', 'wb') as output:
+            pickle.dump(winner, output, 1)
+    except KeyboardInterrupt:
+        visualize.plot_stats(stats, ylog=True, view=True, filename="feedforward-fitness.svg")
+        visualize.plot_species(stats, view=True, filename="feedforward-speciation.svg")
 
-    visualize.plot_stats(stats, ylog=True, view=True, filename="feedforward-fitness.svg")
-    visualize.plot_species(stats, view=True, filename="feedforward-speciation.svg")
 
 if __name__ == "__main__":
     print(sys.argv)

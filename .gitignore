@@ -4,4 +4,3 @@ src/*.gv
 src/messagingReporter.py
 neat-checkpoint-*
 tetris-env/
-winner.pkl
