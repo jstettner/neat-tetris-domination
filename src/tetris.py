@@ -190,13 +190,13 @@ class Game:
                 for j in range(WIDTH):
                     pygame.draw.rect(screen, gray,  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom, zoom], 1)
                     if self.tetris.board[i][j] > 0:
-                        pygame.draw.rect(screen, tet_colors[self.tetris.board[i][j]],  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom-2, zoom-1])
+                        pygame.draw.rect(screen, "white",  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom-2, zoom-1])
             
             if self.tetris.tet != None:
                 for i in range(4):
                     for j in range(4):
                         if i*4+j in self.tetris.tet.current():
-                            pygame.draw.rect(screen, tet_colors[self.tetris.board[i][j]], [self.tetris.tet.x+zoom *(j+self.tetris.tet.x) +1,
+                            pygame.draw.rect(screen, "white", [self.tetris.tet.x+zoom *(j+self.tetris.tet.x) +1,
                                                      self.tetris.tet.y + zoom *(i+self.tetris.tet.y)+1,
                                                     zoom-2, zoom-2])
     
