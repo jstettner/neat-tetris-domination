@@ -20,8 +20,8 @@ def play(genome, config):
         rotation_vector = dominator.one_hot(game.tetris.tet.rotation, 4)
     
         board, row = game.tetris.get_top_four()
-        x_vector = np.array([game.tetris.tet.x])
-        y_vector = np.array([row - game.tetris.tet.y])
+        x_vector = dominator.one_hot(game.tetris.tet.x, 10)
+        y_vector = dominator.one_hot(row - game.tetris.tet.y, 40)
         board_vector = np.ndarray.flatten(board)
         feature_vector =  np.concatenate((piece_vector, rotation_vector, x_vector, y_vector, board_vector))
 
@@ -37,8 +37,6 @@ if __name__ == "__main__":
     file_name = sys.argv[1]
     config_file = sys.argv[2]
 
-    #local_dir = os.path.dirname(__file__)
-    #config_path = os.path.join(local_dir, config_file)
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                              neat.DefaultSpeciesSet, neat.DefaultStagnation,
                              config_file)
