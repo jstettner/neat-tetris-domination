@@ -8,7 +8,7 @@ import visualize
 import multiprocessing
 import os
 import skimage.measure
-import messagingReporter 
+#import messagingReporter
 
 HEADLESS = True
 POOL_X, POOL_Y = (4,1)
@@ -58,11 +58,11 @@ def eval_genome_top_four(genome, config):
 
         piece_vector = one_hot(game.tetris.tet.type, 7)
         rotation_vector = one_hot(game.tetris.tet.rotation, 4)
-    
+
         board, row = game.tetris.get_top_four()
-        # x_vector = np.array([game.tetris.tet.x])
+        #x_vector = np.array([game.tetris.tet.x])
         x_vector = one_hot(game.tetris.tet.x, 10)
-        # y_vector = np.array([row - game.tetris.tet.y])
+        #y_vector = np.array([row - game.tetris.tet.y])
         y_vector = one_hot(row - game.tetris.tet.y, 40)
         board_vector = np.ndarray.flatten(board)
         feature_vector =  np.concatenate((piece_vector, rotation_vector, x_vector, y_vector, board_vector))
@@ -76,7 +76,7 @@ def eval_genome_top_four(genome, config):
         if not HEADLESS:
             time.sleep(.05)
 
-        
+
         # scores.append(game.tetris.turns + game.tetris.score)
 
     # return np.average(scores)
@@ -92,7 +92,7 @@ def train(generations = 100, checkpt = None):
         p = neat.Population(config)
     else:
         p = neat.Checkpointer.restore_checkpoint(checkpt)
-    
+
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
