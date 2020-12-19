@@ -7,14 +7,24 @@ import time
 sys.path.append("src/")
 import tetris as tet
 import dominator
+import pygame
 
 def play(genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
 
     game = tet.Game()
+    black = pygame.Color("#000000")
+    white = pygame.Color("#FFFFFF")
+    gray = pygame.Color("#ABABAB")
+
+    pygame.init()
+    zoom = 20
+    board_size = (200, 800)
+    screen = pygame.display.set_mode(board_size)
 
     while (game.tetris.state == 0):
-        game.tetris.print_board()
+        pygame.event.get()
+        screen.fill(white)
 
         piece_vector = dominator.one_hot(game.tetris.tet.type, 7)
         rotation_vector = dominator.one_hot(game.tetris.tet.rotation, 4)
@@ -29,6 +39,16 @@ def play(genome, config):
         mv = np.argmax(output)
         prev_board = np.copy(game.tetris.board)
         game.move(mv)
+
+        proj = game.tetris.get_projection()
+        for i in range(tet.HEIGHT):
+            for j in range(tet.WIDTH):
+                pygame.draw.rect(screen, white,  [game.tetris.tet.x + zoom * j, game.tetris.tet.y + zoom *i, zoom, zoom], 1)
+
+                if proj[i][j] > 0:
+                    pygame.draw.rect(screen, black,  [game.tetris.tet.x + zoom * j, game.tetris.tet.y + zoom *i, zoom-2, zoom-1])
+        
+        pygame.display.update()
 
         time.sleep(.05)
 
