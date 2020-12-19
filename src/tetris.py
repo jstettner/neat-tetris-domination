@@ -15,7 +15,7 @@ class Tetris:
     turns = 0
 
     def __init__(self):
-        random.seed(4701)
+        # random.seed(4701)
         self.board = np.array(np.zeros((HEIGHT, WIDTH)))
         self.new_tet()
 

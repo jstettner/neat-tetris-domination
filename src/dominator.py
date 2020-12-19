@@ -113,8 +113,10 @@ def train(generations = 100, checkpt = None):
         with open('winner.pkl', 'wb') as output:
             pickle.dump(winner, output, 1)
     except KeyboardInterrupt:
-        visualize.plot_stats(stats, ylog=True, view=True, filename="feedforward-fitness.svg")
-        visualize.plot_species(stats, view=True, filename="feedforward-speciation.svg")
+        pass
+
+    visualize.plot_stats(stats, ylog=True, view=True, filename="feedforward-fitness.svg")
+    visualize.plot_species(stats, view=True, filename="feedforward-speciation.svg")
 
 
 if __name__ == "__main__":
