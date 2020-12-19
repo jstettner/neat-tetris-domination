@@ -1,3 +1,16 @@
+import pygame
+import random
+
+neon_blue = pygame.Color("#33FFFD")
+red = pygame.Color("#FF3333")
+green = pygame.Color("#37FF33")
+purple = pygame.Color("#A433FF")
+orange = pygame.Color("#FFB833")
+yellow = pygame.Color("#FFF133")
+blue = pygame.Color("#3B33FF")
+
+tet_colors = [neon_blue, red, green, purple, orange, yellow, blue]
+
 class Tetromino:
     configurations = [
         [[1,5,9,13], [4,5,6,7]], # Line
@@ -14,6 +27,7 @@ class Tetromino:
         self.y = y
         self.type = typ # random.randint(0, len(self.configurations) - 1)
         self.rotation = 0
+        self.color = random.randint(1, len(tet_colors)-1)
 
     def current(self):
         return self.configurations[self.type][self.rotation]

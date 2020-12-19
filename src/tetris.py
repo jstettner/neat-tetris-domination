@@ -2,6 +2,7 @@ from tetromino import *
 import colorama
 import numpy as np
 import random 
+import pygame
 
 HEIGHT = 40
 WIDTH = 10
@@ -169,13 +170,37 @@ class Game:
             self.tetris.move_down_fully()
         else:
             self.tetris.rotate()
-
+    
+    
     def play(self):
+        black = pygame.Color("#000000")
+        white = pygame.Color("#FFFFFF")
+        gray = pygame.Color("#ABABAB")
+
+        pygame.init()
+        zoom = 20
+        board_size = (400, 800)
+        screen = pygame.display.set_mode(board_size)
+
         while (self.tetris.state == 0):
-            self.tetris.print_board()
+            pygame.event.get()
+            #self.tetris.print_board()
+            screen.fill(white)
             mv = input()
             self.move(mv)
+            proj = self.tetris.get_projection()
+            for i in range(HEIGHT):
+                for j in range(WIDTH):
+                    pygame.draw.rect(screen, white,  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom, zoom], 1)
+
+                    if proj[i][j] > 0:
+                        pygame.draw.rect(screen, black,  [self.tetris.tet.x + zoom * j, self.tetris.tet.y + zoom *i, zoom-2, zoom-1])
+            
+            pygame.display.update()
+        
+        pygame.quit()
         print(self.tetris.score)
+    
 
 
 
