@@ -43,10 +43,10 @@ def play(genome, config):
         proj = game.tetris.get_projection()
         for i in range(tet.HEIGHT):
             for j in range(tet.WIDTH):
-                pygame.draw.rect(screen, white,  [game.tetris.tet.x + zoom * j, game.tetris.tet.y + zoom *i, zoom, zoom], 1)
+                pygame.draw.rect(screen, gray,  [ zoom * j, zoom *i, zoom, zoom], 1)
 
                 if proj[i][j] > 0:
-                    pygame.draw.rect(screen, black,  [game.tetris.tet.x + zoom * j, game.tetris.tet.y + zoom *i, zoom-2, zoom-1])
+                    pygame.draw.rect(screen, black,  [ zoom * j + 1, zoom *i + 1, zoom-2, zoom -1])
         
         pygame.display.update()
 
